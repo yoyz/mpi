@@ -12,6 +12,6 @@ main(int argc, char **argv)
 
   hostname[1023] = '\0';
   gethostname(hostname, 1023);
-  printf("Hello world, rank : %d, size : %d, hostname : %s\n", rank, size, hostname);
+  printf("Hello world, rank : %.4d, size : %.4d, hostname : %s\n", rank, size, hostname);
   MPI_Finalize();
 }
