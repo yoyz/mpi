@@ -7,9 +7,11 @@ OBJ	= gflops.o
 BIN	= gflops
 
 
+CC	= icc
 CC	= gcc
 MPICC	= mpicc
-CFLAGS	= -mavx256-split-unaligned-store -I/usr/lib/openmpi/include/ -lmpi
+#CFLAGS	= -align -xavx -I/opt/intel/impi/4.0.3/include64/ -L/opt/intel/impi/4.0.3/lib64/ -lmpi
+CFLAGS	= -msse4 -O3 -I/usr/lib/openmpi/include/ -lmpi
 LDLIBS	=
 
 all: $(BIN)
@@ -23,3 +25,4 @@ OBJ: $(OBJ)
 
 clean:
 	rm -f $(BIN) $(OBJ)
+
