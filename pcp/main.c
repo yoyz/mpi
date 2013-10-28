@@ -11,7 +11,7 @@
 //#define MSGSIZE 1000000
 //#define N       1000
 
-long MSGSIZE=1024*1024;
+long MSGSIZE=1024*1024*128;
 //long MSGSIZE=1<<23;
 //long N      =10;
 
@@ -57,7 +57,7 @@ int main(char * argc,char **argv)
   lock.l_type = F_WRLCK;
 
   file_size=malloc(sizeof(long));
-  buff=malloc(sizeof(int8_t)*1024*1024);
+  buff=malloc(sizeof(int8_t)*MSGSIZE);
 
   MPI_Init(NULL, NULL);
   MPI_Comm_rank(MPI_COMM_WORLD, &world_rank);
@@ -92,17 +92,17 @@ int main(char * argc,char **argv)
       MPI_Barrier(MPI_COMM_WORLD);  
       for (i=0;i<N;i++)
 	{
-	  printf("=> %d snd_to:%d segment:%d last rcount:%d\n",world_rank,(i)%(world_size-1)+1,i,rcount);
+	  //	  printf("=> %d snd_to:%d segment:%d last rcount:%d\n",world_rank,(i)%(world_size-1)+1,i,rcount);
 	  rcount=fread(buff,MSGSIZE,sizeof(int8_t),RFD);	  
 	  MPI_Send(buff, MSGSIZE, MPI_BYTE,((i)%(world_size-1))+1, 0, MPI_COMM_WORLD);
-	  printf("=> %d snd OK\n",0);
+	  //	  printf("=> %d snd OK\n",0);
 	  //	  MPI_Barrier(MPI_COMM_WORLD);  
 	}
       printf("[first pass file send OK]\n");
     
       if (O>0)
 	{
-	  printf("%d snd\n",world_rank);
+	  //	  printf("%d snd\n",world_rank);
 	  rcount=fread(buff,O,sizeof(int8_t),RFD);	  
 	  MPI_Send(buff, O, MPI_BYTE,1, 0, MPI_COMM_WORLD);
 	}
@@ -120,7 +120,7 @@ int main(char * argc,char **argv)
 	{
 	  if (world_rank==((i)%(world_size-1))+1  )
 	    {
-	      printf("<= %d recv from %d last wcount:%d\n",world_rank,0,wcount);
+	      //printf("<= %d recv from %d last wcount:%d\n",world_rank,0,wcount);
 	      MPI_Recv(buff, MSGSIZE, MPI_BYTE, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
 	      //  MPI_Barrier(MPI_COMM_WORLD);  
 	      //	      lock.l_type = F_WRLCK;
@@ -128,27 +128,29 @@ int main(char * argc,char **argv)
 	      //lseek((int)WFD,MSGSIZE*i,SEEK_SET);
 	      fseek((int)WFD,MSGSIZE*i,SEEK_SET);
 	      wcount=fwrite(buff,MSGSIZE,sizeof(int8_t),WFD);
+	      //wcount=fwrite(buff,1,sizeof(int8_t)*1024*1024,WFD);
 	      //wcount=write(buff,MSGSIZE,sizeof(int8_t),WFD);
 	      //wcount=write(WFD,buff,MSGSIZE);
 	      //	      lock.l_type = F_UNLCK;
 	      //fcntl ((int)WFD, F_SETLKW, &lock); //rank 0 should be the first here to unlock
 
-	      printf("=> %d rcv OK\n",world_rank);
+	      //	      printf("=> %d rcv OK\n",world_rank);
 	    }
 	}
       printf("[first pass file receive OK]\n");
     
-    
-	if (O>0 && world_rank==1)
+      fflush(WFD);
+      if (O>0 && world_rank==1)
 	{
-	printf("%d recv\n",world_rank);
-	MPI_Recv(buff, O, MPI_BYTE, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
-	fwrite(buff,O,sizeof(int8_t),WFD);
+	  printf("%d recv\n",world_rank);
+	  MPI_Recv(buff, O, MPI_BYTE, 0, 0, MPI_COMM_WORLD,MPI_STATUS_IGNORE);
+	  fseek((int)WFD,MSGSIZE*N,SEEK_SET);
+	  fwrite(buff,O,sizeof(int8_t),WFD);
 	}
-    
+      fflush(WFD);
       fclose(WFD);
     }
-  //  fflush(WFD);
+  //  
   //MPI_Barrier(MPI_COMM_WORLD);  
   //  fclose(WFD);
   //  fclose(RFD);
