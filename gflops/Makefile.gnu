@@ -8,10 +8,10 @@ BIN	= gflops
 
 
 CC	= icc
-CC	= gcc
+CC	= g++
 MPICC	= mpicc
 #CFLAGS	= -align -xavx -I/opt/intel/impi/4.0.3/include64/ -L/opt/intel/impi/4.0.3/lib64/ -lmpi
-CFLAGS	= -msse4 -O3 -I/usr/lib/openmpi/include/ -lmpi
+CFLAGS	= -msse -O3 -I/usr/lib/openmpi/include/ -lmpi -lmpi_cxx
 LDLIBS	=
 
 all: $(BIN)
