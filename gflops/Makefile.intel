@@ -1,0 +1,26 @@
+# Makefile
+
+# source /opt/intel/composer_xe_2013.5.192/bin/iccvars.sh intel64
+# source /opt/intel/mpi-rt/4.1.0.030/bin64/mpivars.sh
+SRC_BB	= hw.c
+OBJ_BB	= hw.o
+BIN_BB	= hw
+
+
+CC	= icpc
+MPICC	= mpicc
+CFLAGS	= -xavx -DALIGN -I/opt/intel/impi/4.1.0.030/include64/ -L/opt/intel/impi/4.1.0.030/lib64/ -lmpi
+LDLIBS	=
+
+all: $(BIN_BB)
+
+
+BIN: $(BIN_BB)
+	$(MPICC) $(CFLAGS) $(OBJ_BB) -o $(BIN_BB)   $(LDLIBS)
+
+OBJ: $(OBJ_BB)
+	$(MPICC) $(CFLAGS) $(SRC_BB) -o $(OBJ_BB)
+
+clean:
+	rm -f $(BIN_BB) $(OBJ_BB)
+

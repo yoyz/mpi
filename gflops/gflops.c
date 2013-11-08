@@ -26,13 +26,12 @@
  *
  */
 
-
+#include <mpi.h>
 #include <stdio.h>
 #include <math.h>
 #include <sys/time.h>
-#include <mpi.h>
-#include "vectorclass.h"
 #include <unistd.h>
+#include "vectorclass.h"
 
 #ifndef M_PI
 #define M_PI           3.14159265358979323846

@@ -7,11 +7,9 @@ OBJ	= gflops.o
 BIN	= gflops
 
 
-CC	= icc
 CC	= g++
-MPICC	= mpicc
-#CFLAGS	= -align -xavx -I/opt/intel/impi/4.0.3/include64/ -L/opt/intel/impi/4.0.3/lib64/ -lmpi
-CFLAGS	= -msse -O3 -I/usr/lib/openmpi/include/ -lmpi -lmpi_cxx
+MPICC	= 
+CFLAGS	=  -msse4 -O3 -I/usr/include/openmpi -L/usr/lib/openmpi/lib/ -lmpi_cxx -lmpi
 LDLIBS	=
 
 all: $(BIN)
