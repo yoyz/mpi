@@ -67,6 +67,7 @@ double addmul_avx()
   Vec4d  j(4.5, 4.6, 4.7, 4.8);
   Vec4d  k(4.9, 5.0, 5.1, 5.2);
   Vec4d  l(5.3, 5.4, 5.5, 5.6);
+
   Vec4d  m(6.1, 6.2, 6.3, 6.4);
   Vec4d  n(6.5, 6.6, 6.7, 6.8);
   Vec4d  o(6.9, 7.0, 7.1, 7.2);
@@ -223,9 +224,28 @@ int main(int argc, char** argv)
   hostname[1023] = '\0';
   gethostname(hostname, 1023);
   t=stoptime();  
+
+#ifdef __SSE__
+  printf("calling addmul_sse\n");
   for (i=0;i<iter;i++)
     x+=addmul_sse();
+#endif
+
+#ifdef __AVX__
+  printf("calling addmul_avx\n");
+  printf("AVX\n");
+  for (i=0;i<iter;i++)
+    x+=addmul_avx();
+#endif
+
+
   t=stoptime()-t;
+
+  // Here we launch max1*max2*iteration 
+  // 16 assembly instruction on 16 register
+  // storing 2 data on SSE
+  // storing 4 data on AVX
+#ifdef __SSE__
   printf("rank: %.4d\thost: %s\tgflops:\t %.3f s, %.3f Gflops, rank: %.4d res=%f\n",
          rank,
          hostname,
@@ -233,6 +253,16 @@ int main(int argc, char** argv)
          (double)max1*max2*iter*16*2/t/1e9,
          rank,
          x);
+#endif
+#ifdef __AVX__
+  printf("rank: %.4d\thost: %s\tgflops:\t %.3f s, %.3f Gflops, rank: %.4d res=%f\n",
+         rank,
+         hostname,
+         t,
+         (double)max1*max2*iter*16*4/t/1e9,
+         rank,
+         x);
+#endif
 
   MPI_Finalize();
 
