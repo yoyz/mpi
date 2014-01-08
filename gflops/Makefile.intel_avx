@@ -1,0 +1,27 @@
+# Makefile
+
+# source /opt/intel/composer_xe_2013.5.192/bin/iccvars.sh intel64
+# source /opt/intel/mpi-rt/4.1.0.030/bin64/mpivars.sh
+SRC	= gflops.c
+OBJ	= gflops.o
+BIN	= gflops
+
+
+CC	= icpc
+MPICC	= icpc
+
+CFLAGS	= -D__MYAVX__ -xavx -O3 -I/opt/intel/impi/4.1.0.030/include64/ -L/opt/intel/impi/4.1.0.030/lib64/ -lmpi
+LDLIBS	=
+
+all: $(BIN)
+
+
+${BIN}: $(OBJ)
+	$(MPICC) $(CFLAGS) $(OBJ) -o $(BIN)   $(LDLIBS)
+
+${OBJ}: ${SRC}
+	$(MPICC) $(CFLAGS) -c $(SRC) -o $(OBJ)
+
+clean:
+	rm -f $(BIN) $(OBJ)
+
