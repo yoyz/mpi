@@ -9,7 +9,7 @@ BIN	= gflops
 
 CC	= g++
 MPICC	= g++
-CFLAGS	=  -mavx -O3 -I/usr/include/openmpi -L/usr/lib/openmpi/lib/ -lmpi_cxx -lmpi
+CFLAGS	=  -D __MYAVX__-mavx -O3 -I/usr/include/openmpi -L/usr/lib/openmpi/lib/ -lmpi_cxx -lmpi
 LDLIBS	=
 
 all: ${BIN}
