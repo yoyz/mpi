@@ -2,14 +2,15 @@
 
 # source /opt/intel/bin/iccvars.sh intel64
 # source /opt/intel/mpi-rt/4.0.3/bin64/mpivars.sh
-SRC	= t.c
-OBJ	= t.o
-BIN	= t
+SRC	= main.c
+OBJ	= main.o
+BIN	= main
 
 
-CC	= icc
+CC	= gcc
 MPICC	= mpicc
-CFLAGS	= -align -xavx -I/opt/intel/impi/4.0.3/include64/ -L/opt/intel/impi/4.0.3/lib64/ -lmpi
+CFLAGS  = -I/usr/include/mpi -lmpi -g
+#CFLAGS	= -align -xavx -I/opt/intel/impi/4.0.3/include64/ -L/opt/intel/impi/4.0.3/lib64/ -lmpi
 LDLIBS	=
 
 all: $(BIN)
