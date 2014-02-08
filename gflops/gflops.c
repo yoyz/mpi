@@ -38,7 +38,7 @@
 #endif
 
 long long max1=100000;
-long long max2=10000;
+long long max2=20000;
 
 double stoptime(void) 
 {
@@ -133,24 +133,24 @@ double addmul_sse()
   double    mul=1.00001;
 
   Vec2d  a(0.1, 0.2);
-  Vec2d  b(0.5, 0.6);
-  Vec2d  c(0.9, 1.0);
-  Vec2d  d(1.3, 1.4);
+  Vec2d  b(0.3, 0.4);
+  Vec2d  c(0.5, 0.6);
+  Vec2d  d(0.7, 0.8);
 
   Vec2d  e(2.1, 2.2);
-  Vec2d  f(2.5, 2.6);
-  Vec2d  g(2.9, 3.0);
-  Vec2d  h(3.3, 3.4);
+  Vec2d  f(2.3, 2.4);
+  Vec2d  g(2.5, 2.6);
+  Vec2d  h(2.7, 2.8);
 
-  Vec2d  i(4.1, 4.2);
-  Vec2d  j(4.5, 4.6);
-  Vec2d  k(4.9, 5.0);
-  Vec2d  l(5.3, 5.4);
+  Vec2d  i(3.1, 3.2);
+  Vec2d  j(3.3, 3.4);
+  Vec2d  k(3.5, 3.6);
+  Vec2d  l(3.7, 3.8);
 
-  Vec2d  m(6.1, 6.2);
-  Vec2d  n(6.5, 6.6);
-  Vec2d  o(6.9, 7.0);
-  Vec2d  p(7.3, 7.4);
+  Vec2d  m(4.1, 4.2);
+  Vec2d  n(4.3, 4.4);
+  Vec2d  o(4.5, 4.6);
+  Vec2d  p(4.7, 4.8);
 
   
   for(ii=0; ii< max1*max2 ; ii++)
