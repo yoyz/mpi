@@ -9,7 +9,7 @@ BIN	= gflops
 
 CC	= g++
 MPICC	= g++
-CFLAGS	= -D__MYSSE__ -msse4.1 -O3 -I/usr/include/openmpi -L/usr/lib/openmpi/lib/ -lmpi_cxx -lmpi
+CFLAGS	= -D__MYSSE__ -malign-double -msse4.2 -O1 -I/usr/include/openmpi -L/usr/lib/openmpi/lib/ -lmpi_cxx -lmpi
 LDLIBS	=
 
 all: ${BIN}
