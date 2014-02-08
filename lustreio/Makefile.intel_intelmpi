@@ -1,0 +1,28 @@
+# Makefile
+
+# source /opt/intel/bin/iccvars.sh intel64
+# source /opt/intel/mpi-rt/4.0.3/bin64/mpivars.sh
+
+
+SRC_BB  = main.c
+OBJ_BB  = main.o
+BIN_BB  = main
+
+
+CC      = icc
+MPICC   = mpicc
+#CFLAGS  = -I/opt/mpi/bullxmpi//1.2.4.1/include/ -L/opt/mpi/bullxmpi/1.2.4.1/lib/ -align -lmpi 
+CFLAGS  = -I/opt/intel/mpi-rt/4.0.3/include64 -L/opt/intel/mpi-rt/4.0.3/lib64/ -lmpi
+LDLIBS  =
+
+all: $(BIN_BB)
+
+
+BIN: $(BIN_BB)
+	$(MPICC) $(CFLAGS) $(OBJ_BB) -o $(BIN_BB)   $(LDLIBS)
+
+OBJ: $(OBJ_BB)
+	$(MPICC) $(CFLAGS) $(SRC_BB) -o $(OBJ_BB)
+
+clean:
+	rm -f $(BIN_BB) $(OBJ_BB)

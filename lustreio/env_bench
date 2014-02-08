@@ -1,0 +1,2 @@
+source /opt/intel/composer_xe_2013.5.192/bin/compilervars.sh intel64
+source /opt/intel/mpi-rt/4.1.0/bin64/mpivars.sh

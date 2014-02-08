@@ -11,7 +11,7 @@
 //#define MSGSIZE 1000000
 //#define N       1000
 
-long MSGSIZE=1024*1024*1;
+long MSGSIZE=1024*1024*256;
 //long MSGSIZE=1<<23;
 //long N      =10;
 
