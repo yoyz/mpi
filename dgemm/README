@@ -1,0 +1,56 @@
+original idea from : 
+
+	source code
+	https://software.intel.com/sites/products/documentation/doclib/mkl_sa/11/tutorials/mkl_mmx_c/GUID-36BFBCE9-EB0A-43B0-ADAF-2B65275726EA.htm
+	
+	can be found in this git here : dgemm_intel_original.c
+
+	how to compute gflops/s
+
+	https://software.intel.com/en-us/articles/a-simple-example-to-measure-the-performance-of-an-intel-mkl-function
+
+
+
+Tips to measure the performance of Intel® MKL with small matrix sizes
+Submitted by Ying H (Intel) on Mon, 08/13/2012 - 05:06
+
+Introduction
+
+Intel® Math Kernel Library (Intel® MKL) is a highly optimized and extensively threaded math library especially suitable for computationally intensive applications. Developers often want to evaluate the performance of Intel MKL. Many factors contribute to the performance of an Intel MKL subroutine, such as problem size, memory size, parallelism, states of caches, branch prediction logic, and so on. In this article, we provide a simple recommendation for improving the accuracy of performance measurements: ignore the time required by the first Intel MKL call. We use performance measurement of DGEMM, double-precision general matrix multiplication, as an example. Please refer to the BLAS section of the Intel MKL Reference Manual for a detailed description of DGEMM.
+
+Measuring the Performance of DGEMM
+
+Intel MKL is multi-threaded and employs internal buffers for fast memory allocation. Typically the first subroutine call initializes the threads and internal buffers. Therefore, the first function call may take more time compared to the subsequent calls with the same arguments. Although the initialization time usually insignificant compared to the execution time of DGEMM for large matrices, it can be substantial when timing DGEMM for small matrices. To remove the initialization time from the performance measurement, we recommend making a call to DGEMM with sufficiently large parameters (for example, M=N=K=100) and ignoring the time required for the first call. Using a small matrix for the first call won’t initialize the threads since Intel MKL executes multi-threaded code only for sufficiently large matrices. 
+
+Intel MKL provides the timing function, dsecnd(), which measures the execution time in seconds. The execution time of a subroutine may vary from one call to another, and small problems are especially susceptible to the time variations due to system artifacts. Therefore, for functions with small execution times, it is a common practice to measure the average performance by placing the function within a loop. The total elapsed time divided by the loop count gives the average time required for a single function call. The loop count should be large enough to get a representative average for small problems. On the other hand, if a large loop count is chosen, then the execution time of the benchmark may be prohibitive for large problems. 
+
+Performance measured in Gflops
+
+One may wish to calculate the number of floating point operations required for DGEMM as well as the performance in terms of floating point operations per second (Flops). Flops is a useful metric to compare the performance of compute-bound subroutines like DGEMM with the theoretical peak performance of a machine. For the multiplication of an M×K A matrix and a K×N B matrix, 2K - 1 operations (K-1 additions and K multiplications) are required to compute each element of the result matrix. Since there are MN entries in the C matrix, MN(2K-1) operations are required for the multiplication of the two matrices. 2MN additional operations are required for adding scaled C to AB. Therefore, the total number of floating point operations for a typical DGEMM call is approximately 2MNK. Dividing the number of operations by the average time gives the average Flops rate for DGEMM. Typically, the performance is reported as GFlops, which is 109 Flops. An example code that determines the time and GFlops for DGEMM is provided below. 
+
+Example Code
+
+Below code measures the performance of DGEMM using dsecnd() function in Intel MKL. The return value of the first dsecnd() may be slightly off, therefore we recommend discarding the return value of the first dsecnd() call.   
+
+
+01 /* mkl.h is required for dsecnd and DGEMM */
+02 #include <mkl.h>
+03 
+04 /* initialization code is skipped for brevity (do a dummy dsecnd() call to improve accuracy of timing) */
+05 
+06 double alpha = 1.0, beta = 1.0;
+07 /* first call which does the thread/buffer initialization */
+08 DGEMM(“N”, “N”, &m, &n, &k, &alpha, A, &m, B, &k, &beta, C, &m);
+09 /* start timing after the first GEMM call */
+10 double time_st = dsecnd();
+11 for (i=0; i<LOOP_COUNT; ++i)
+12 {
+13 DGEMM("N", "N", &m, &n, &k, &alpha, A, &m, B, &k, &beta, C, &m);
+14 }
+15 double time_end = dsecnd();
+16 double time_avg = (time_end - time_st)/LOOP_COUNT;
+17 double gflop = (2.0*m*n*k)*1E-9;
+18 printf("Average time: %e secs n", time_avg);
+19 printf("GFlop       : %.5f  n", gflop);
+20 printf("GFlop/sec   : %.5f  n," gflop/time_avg); 
+
