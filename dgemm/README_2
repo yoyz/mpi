@@ -1,0 +1,2 @@
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/yoyz/local/OpenBLAS/lib/
+mpicc  dgemm_intel_3.c -o dgemm_intel_3 -L/home/yoyz/local/OpenBLAS/lib/ -lopenblas -I/home/yoyz/local/OpenBLAS/include
