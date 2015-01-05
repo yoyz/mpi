@@ -32,9 +32,18 @@ int main(int argc, char **argv)
   double    t,t1,t2;
   double    local_bandwith;
   double    global_bandwith;
+  int       size_mega_commited_by_rank;
+  int       nb_iter;
   
-  int     size_mega_commited_by_rank=atoi(argv[1]);
-  int     nb_iter=atoi(argv[2]);
+  
+  if (argc!=3)
+    {
+      printf("%s <number_of_mega> <number_of_iter> \n",argv[0]);
+      exit(1);
+    }
+
+  size_mega_commited_by_rank=atoi(argv[1]);
+  nb_iter=atoi(argv[2]);
 
 
   //buffer=malloc(sizeof(int64_t)*NBELEM);
