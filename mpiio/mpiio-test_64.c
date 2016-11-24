@@ -37,12 +37,12 @@ int main(argc, argv)
 
   char        *junk;
 
-  int          number_of_blocks; 
-  int          block_size_in_byte;
-  int          number_of_repeat;
-  int          filename_length;
-  int          total_number_of_bytes;
-  int          number_of_bytes_by_repeat;
+  int64_t          number_of_blocks; 
+  int64_t          block_size_in_byte;
+  int64_t          number_of_repeat;
+  int64_t          filename_length;
+  int64_t          total_number_of_bytes;
+  int64_t          number_of_bytes_by_repeat;
 
   //printf("%d\n",sizeof(int)); exit(0);
   
@@ -172,6 +172,7 @@ if (i_am_the_master)
  for (i = 0; i < block_size_in_byte; i++) 
    *(junk + i) = my_rank;
 
+ start = MPI_Wtime();
  while (j<number_of_repeat+1)
    {
      MPI_Barrier(MPI_COMM_WORLD);
@@ -193,7 +194,7 @@ if (i_am_the_master)
      //srand(28 + my_rank);
      //for (i = 0; i < number_of_integers; i++) *(junk + i) = rand();
      /* write the stuff out */
-     start = MPI_Wtime();
+
      k=0;
      
      //{
@@ -207,8 +208,6 @@ if (i_am_the_master)
 	 //}
        }
 
-     finish = MPI_Wtime();
-     io_time = finish - start;
      MPI_Get_count(&status, MPI_INT, &count);
 #ifdef DEBUG
      printf("%3d: wrote %d integers number_of_repeat:%I64d/%I64d\n", my_rank, count,j,number_of_repeat);
@@ -220,6 +219,11 @@ if (i_am_the_master)
      j++;
    }
  MPI_File_close(&fh);
+
+ finish = MPI_Wtime();
+ io_time = finish - start;
+
+
  
  MPI_Allreduce(&io_time, &longest_io_time, 1, MPI_DOUBLE, MPI_MAX,
 	       MPI_COMM_WORLD);
