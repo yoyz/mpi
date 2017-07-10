@@ -14,10 +14,11 @@ int main( int argc, char *argv[] )
         char * filename;
         MPI_File fh;
         MPI_Comm comm;
+        MPI_Info  mpi_info, mpi_info_used;
         int rank,size;
         int64_t i,size64,array_size,repeat;
         char * solution;
-        if (argc  < 3 || argc > 4)      { printf("mpiio <xferByte> <repeat> [filename]\n");     exit(1);        }
+        if (argc  < 3 || argc > 4)      { printf("mpiio <xferByte> <repeat> [filename] [hintfile]\n");  exit(1);        }
         if (argc == 4 )                 { filename=(char*)argv[3]; }    else { filename="output";               }
         array_size=atoi(argv[1]);
         repeat=atoi(argv[2]);
@@ -29,9 +30,12 @@ int main( int argc, char *argv[] )
         size64=size;
         memset(solution,rank,array_size);
         t=0;
+        MPI_Info_create(&mpi_info);
+        //MPI_Info_set( mpi_info, "cb_nodes", "1");
+        //MPI_Info_set( mpi_info, "romio_cb_write", "enable");
         gettimeofday(&tv0,&tz);
-        MPI_File_open(comm,filename,MPI_MODE_WRONLY|MPI_MODE_CREATE,MPI_INFO_NULL,&fh);
-        MPI_File_set_view(fh, rank*array_size*sizeof(char), MPI_CHAR, MPI_CHAR, "native", MPI_INFO_NULL);
+        MPI_File_open(comm,filename,MPI_MODE_WRONLY|MPI_MODE_CREATE,mpi_info,&fh);
+        MPI_File_set_view(fh, rank*array_size*sizeof(char), MPI_CHAR, MPI_CHAR, "native", mpi_info);
         for (i=1;i<repeat+1;i++)
         {
                 MPI_File_write_all( fh, solution, array_size, MPI_CHAR, MPI_STATUS_IGNORE );
@@ -48,3 +52,4 @@ int main( int argc, char *argv[] )
         }
         MPI_Finalize();
 }
+
