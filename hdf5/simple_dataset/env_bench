@@ -1,0 +1,2 @@
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:~/local/hdf5-1.8.18/lib/
+export PATH=$PATH:~/local/hdf5-1.8.18/bin/
