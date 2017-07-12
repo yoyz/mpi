@@ -17,7 +17,7 @@ int main (int argc, char **argv)
     int         i;
     herr_t	status;
     int         repeat_count=0;
-    int         nx,ny,repeat;
+    int64_t     nx,ny,repeat;
     int64_t     t=0;
     double      data_written=0;
     double      time=0;
