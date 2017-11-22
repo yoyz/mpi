@@ -1,7 +1,7 @@
    program hello
+   use mpi
    implicit none  
 
-   include 'mpif.h'
    integer rank, size, ierr, tag, status(MPI_STATUS_SIZE)
    integer n
    integer TAB(64)
@@ -14,7 +14,7 @@
      TAB(i)=rank*1000+i
    enddo
    print *,rank,TAB(1),TAB(64)
-   print*, 'node', rank, ': Hello world'
+   !print*, 'node', rank, ': Hello world'
 
    if (rank == 0) then
      call MPI_Send(TAB, n, MPI_INT, 1, 0, MPI_COMM_WORLD,ierr)
@@ -22,9 +22,10 @@
    if (rank == 1) then
      call MPI_Recv(TAB, n, MPI_INT, 0, 0, MPI_COMM_WORLD,status,ierr)
    end if
-   print *,""
+   call   MPI_Barrier(MPI_COMM_WORLD,ierr)
+   print *,"===="
+   call   MPI_Barrier(MPI_COMM_WORLD,ierr)
    print *,rank,TAB(1),TAB(64)
-   print *, 'node', rank, ': Hello world'
 
    call MPI_FINALIZE(ierr)
    end
