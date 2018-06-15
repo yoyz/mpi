@@ -5,8 +5,8 @@
 #include <string.h>  // memcpy
 #include <stdlib.h>  // malloc/free
 
-int64_t MSGSIZE=1024*1024*64;
-int64_t N      =800;
+int64_t MSGSIZE=1024*1024*16;
+int64_t N      =1000;
 
 double stoptime(void) 
 {
